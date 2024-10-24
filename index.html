@@ -10,32 +10,64 @@
         body {
             margin: 20px;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        h5 {
+        h1, h5 {
             text-align: center;
             margin-bottom: 30px;
         }
         .table-responsive {
-            font-size: 1.3rem; /* Ukuran font kecil */
+            font-size: 1rem;
         }
         .table-sm th, .table-sm td {
-            padding: 0.9rem; /* Kurangi padding untuk ukuran tabel lebih kecil */
+            padding: 0.4rem;
         }
-        .semester-title {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            text-align: center;
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .select-value {
+            font-size: 0.8rem; /* Ukuran font untuk nilai yang dipilih */
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            background-color: #fff;
+        }
+        .arrow {
+            position: absolute;
+            top: 5px; /* Menempatkan panah di atas teks */
+            right: 10px; /* Menentukan jarak dari kanan */
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid #000; /* Warna panah */
+        }
+        .options {
+            display: none; /* Tersembunyi secara default */
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            z-index: 1000;
+            width: 100%;
+        }
+        .options div {
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .options div:hover {
+            background-color: #f1f1f1; /* Efek hover */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        
         <h1>Perhitungan IPK - Manajemen Informatika D3</h1>
-        <h5>kali aja mau ngitung ipk ini mah iseng ngoding doang wk</h5>
+        <h5>Hitung IPK dengan mudah!</h5>
+
+        <!-- Form untuk input nama dan tabel nilai -->
         <form id="ipkForm">
             <!-- Input Nama Mahasiswa -->
             <div class="mb-3">
@@ -48,15 +80,16 @@
                 <table class="table table-bordered table-sm">
                     <thead class="table-dark">
                         <tr>
-                            <th class="col-md-2">Mata Kuliah</th>
-                            <th class="col-md-2">SKS</th>
-                            <th class="col-md-1">Nilai</th>
+                            <th class="col-md-4">Mata Kuliah</th>
+                            <th class="col-md-4">SKS</th>
+                            <th class="col-md-4">Nilai</th>
                         </tr>
                     </thead>
-                <tbody id="matkulList">
-                    <!-- Mata kuliah akan dimasukkan secara dinamis menggunakan JavaScript -->
-                </tbody>
-            </table>
+                    <tbody id="matkulList">
+                        <!-- Mata kuliah akan dimasukkan secara dinamis menggunakan JavaScript -->
+                    </tbody>
+                </table>
+            </div>
 
             <div class="text-center">
                 <button type="button" class="btn btn-primary" onclick="hitungIPK()">Hitung IPK</button>
@@ -81,7 +114,6 @@
             { semester: 1, nama: "Pemrograman Dasar I", sks: 3 },
             { semester: 1, nama: "Kalkulus", sks: 3 },
             { semester: 1, nama: "Aplikasi Perkantoran I", sks: 2 },
-
             { semester: 2, nama: "Pendidikan Agama II", sks: 2 },
             { semester: 2, nama: "Dasar Manajemen dan Bisnis", sks: 3 },
             { semester: 2, nama: "Pemrograman Dasar II", sks: 3 },
@@ -90,7 +122,6 @@
             { semester: 2, nama: "Matematika Diskrit", sks: 2 },
             { semester: 2, nama: "Pemrograman Web I", sks: 3 },
             { semester: 2, nama: "Aplikasi Perkantoran II", sks: 2 },
-
             { semester: 3, nama: "Struktur Data", sks: 3 },
             { semester: 3, nama: "Pemrograman Visual I", sks: 3 },
             { semester: 3, nama: "Statistik, Aljabar Vektor, dan Matrik", sks: 3 },
@@ -98,7 +129,6 @@
             { semester: 3, nama: "Arsitektur dan Organisasi Komputer", sks: 3 },
             { semester: 3, nama: "Sistem Informasi Manajemen", sks: 3 },
             { semester: 3, nama: "Pemrograman Web II", sks: 3 },
-
             { semester: 4, nama: "Basis Data", sks: 3 },
             { semester: 4, nama: "Sistem Berkas", sks: 3 },
             { semester: 4, nama: "Pemrograman Visual II", sks: 3 },
@@ -106,7 +136,6 @@
             { semester: 4, nama: "Analisa Sistem Informasi", sks: 3 },
             { semester: 4, nama: "Bahasa Inggris II", sks: 2 },
             { semester: 4, nama: "Teori Administrasi", sks: 2 },
-
             { semester: 5, nama: "Sistem Operasi", sks: 3 },
             { semester: 5, nama: "Metode Penelitian Teknik", sks: 2 },
             { semester: 5, nama: "Perancangan Sistem Informasi", sks: 3 },
@@ -114,7 +143,6 @@
             { semester: 5, nama: "Studi Kasus", sks: 3 },
             { semester: 5, nama: "Pemrograman Java", sks: 3 },
             { semester: 5, nama: "Desain Grafis", sks: 2 },
-
             { semester: 6, nama: "E-Commerce", sks: 3 },
             { semester: 6, nama: "Manajemen Strategik", sks: 2 },
             { semester: 6, nama: "Manajemen Proyek Sistem Informasi", sks: 3 },
@@ -139,17 +167,34 @@
                 <td>${mk.nama}</td>
                 <td>${mk.sks}</td>
                 <td>
-                    <select id="nilai${index}" class="form-select">
-                        <option value="4">A</option>
-                        <option value="3">B</option>
-                        <option value="2">C</option>
-                        <option value="1">D</option>
-                        <option value="0">E</option>
-                    </select>
+                    <div class="custom-select">
+                        <div class="select-value" onclick="toggleOptions(${index})">Pilih Nilai</div>
+                        <div class="arrow"></div>
+                        <div class="options" id="options${index}">
+                            <div onclick="selectValue(${index}, 4)">A</div>
+                            <div onclick="selectValue(${index}, 3)">B</div>
+                            <div onclick="selectValue(${index}, 2)">C</div>
+                            <div onclick="selectValue(${index}, 1)">D</div>
+                            <div onclick="selectValue(${index}, 0)">E</div>
+                        </div>
+                    </div>
                 </td>
             `;
             matkulList.appendChild(row);
         });
+
+        // Fungsi untuk menampilkan opsi nilai
+        function toggleOptions(index) {
+            const options = document.getElementById(`options${index}`);
+            options.style.display = options.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Fungsi untuk memilih nilai
+        function selectValue(index, value) {
+            document.getElementById(`options${index}`).style.display = 'none';
+            document.querySelectorAll('.select-value')[index].innerText = value === 4 ? 'A' : value === 3 ? 'B' : value === 2 ? 'C' : value === 1 ? 'D' : 'E';
+            document.querySelectorAll('.select-value')[index].setAttribute('data-value', value);
+        }
 
         // Fungsi untuk menghitung IPK
         function hitungIPK() {
@@ -165,7 +210,7 @@
             // Loop melalui semua mata kuliah
             matkul.forEach((mk, index) => {
                 const sks = mk.sks; // SKS mata kuliah
-                const nilai = parseFloat(document.getElementById(`nilai${index}`).value); // Nilai yang dipilih
+                const nilai = parseFloat(document.querySelectorAll('.select-value')[index].getAttribute('data-value')) || 0; // Nilai yang dipilih
                 totalSKS += sks;
                 totalNilai += nilai * sks;
             });
@@ -173,10 +218,8 @@
             // Hitung IPK
             const ipk = totalNilai / totalSKS;
 
-            // Tampilkan hasil IPK
-            const hasilIPK = document.getElementById('hasilIPK');
-            hasilIPK.style.display = 'block';
-            hasilIPK.innerHTML = `Nama: ${nama} <br> Jurusan: Manajemen Informatika <br> IPK Anda adalah: ${ipk.toFixed(2)}`;
+            // Tampilkan hasil IPK sebagai popup alert
+            alert(`Nama: ${nama}\nJurusan: Manajemen Informatika\nIPK Anda adalah: ${ipk.toFixed(2)}`);
         }
     </script>
 </body>
